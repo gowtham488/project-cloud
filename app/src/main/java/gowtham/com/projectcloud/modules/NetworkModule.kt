@@ -13,31 +13,32 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 @Module
-class IOModule () {
+class NetworkModule {
 
     val baseUrl = "http://api.openweathermap.org/"
 
     @Provides
-    fun provideOkHttpClient(cache : Cache) : OkHttpClient {
+    fun provideHttpClient(cache: Cache): OkHttpClient {
         val client = OkHttpClient.Builder()
         client.cache(cache)
         return client.build()
     }
 
     @Provides
-    fun provideCache(application : Application) : Cache
-            = Cache(application.cacheDir, 1024*1024*10)
+    fun provideCache(application: Application): Cache {
+        val cacheSize = 1024 * 1024 * 10
+        return Cache(application.cacheDir, cacheSize.toLong())
+    }
 
     @Provides
-    fun provideGson() : Gson {
+    fun provideGson(): Gson {
         val gsonBuilder = GsonBuilder()
         gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
         return gsonBuilder.create()
     }
 
     @Provides
-    fun provideRetrofit(gson : Gson, client : OkHttpClient)
-            = Retrofit.Builder()
+    fun provideRetrofit(gson: Gson): Retrofit = Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .baseUrl(baseUrl)
