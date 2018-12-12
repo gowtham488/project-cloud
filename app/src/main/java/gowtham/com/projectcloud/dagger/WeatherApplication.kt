@@ -1,6 +1,7 @@
 package gowtham.com.projectcloud.dagger
 
 import android.app.Application
+import gowtham.com.projectcloud.modules.NetworkModule
 
 class WeatherApplication : Application() {
 
@@ -11,6 +12,7 @@ class WeatherApplication : Application() {
 
         component = DaggerApplicationComponent.builder()
                 .applicationModule(ApplicationModule(this))
+                .networkModule(NetworkModule(this))
                 .build()
     }
 }
