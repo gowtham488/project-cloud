@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import gowtham.com.projectcloud.R
 import gowtham.com.projectcloud.dagger.WeatherApplication
+import gowtham.com.projectcloud.services.WeatherApiService
 import retrofit2.Retrofit
 import javax.inject.Inject
 
@@ -16,14 +17,19 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var retrofit : Retrofit
 
+    @Inject
+    lateinit var weatherApiService : WeatherApiService
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
-
         (application as WeatherApplication).component!!.injectMainActivity(this)
+        getWeather()
     }
+
+    private fun getWeather() {}
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -37,10 +43,8 @@ class MainActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         val id = item.itemId
 
-
         return if (id == R.id.action_settings) {
             true
         } else super.onOptionsItemSelected(item)
-
     }
 }

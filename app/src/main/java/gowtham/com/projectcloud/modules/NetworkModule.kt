@@ -7,10 +7,12 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import gowtham.com.projectcloud.dagger.WeatherApplication
+import gowtham.com.projectcloud.services.WeatherApiService
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 
 @Module
 class NetworkModule(private val weatherApplication: WeatherApplication) {
@@ -41,6 +43,13 @@ class NetworkModule(private val weatherApplication: WeatherApplication) {
     fun provideRetrofit(gson: Gson, client: OkHttpClient): Retrofit = Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .client(client)
             .baseUrl(baseUrl)
             .build()
+
+    @Provides
+    @Singleton
+    fun provideWeatherApiService(retrofit: Retrofit): WeatherApiService =
+            retrofit.create(WeatherApiService::class.java)
+
 }
